@@ -44,7 +44,7 @@ int secmax(int* arr, int len) {						//TASK 2 FIND SECOND MAX
 	return secar[1];
 }				
 
-void sortarray(int* arr, int len) {
+void sortarray(int* arr, int len) {					//TASK SORT ARRAY
 	for (int i = 0; i < len; i++) {
 		int curmin = arr[i];
 		int ind = i;
@@ -74,32 +74,8 @@ int binsearch(int target, int* arr, int len) {	//TASK 3 BIN SEARCH
 	return -1;
 }
 
-void buildtable(int **table, int* arr, int len) {	//MULTIPLICATION TABLE
-	table = (int**)malloc((len + 1) * sizeof(int*));
-	for (int i = 0; i < (len + 1); i++) {
-		table[i] = (int*)malloc(sizeof(int) * (len + 1));
-	}
 
-
-	for (int i = 0; i < len + 1; i++) {
-		for (int j = 0; j < len+1; j++) {
-			if (i == 0 && j == 0) table[i][j] = 0;
-			else if (i == 0) table[i][j] = arr[j - 1];	
-			else if (j == 0) table[i][j] = arr[i - 1];
-			else table[i][j] = arr[i - 1] * arr[j - 1];
-		}
-		
-	}
-	
-	for (int i = 0; i < len+1; i++) {
-		for (int j = 0; j < len+1; j++) {
-			printf("%d\t", table[i][j]);
-		}
-		printf("\n");
-	}
-}
-
-void multable(int len) {
+void multable(int len) {							//TASK 4 MULTIPLICATION TABLE
 	int* arr = (int*)malloc(len * sizeof(int));
 	for (int i = 0; i < len; i++) {
 		arr[i] = i+1;
