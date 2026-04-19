@@ -87,6 +87,60 @@ int binsearch(int target, int* arr, int len) {	//TASK 3 BIN SEARCH
 ```
 4. Таблица умножения
 ```
+#include<stdio.h>
+
+void multable(int len) {							//TASK 4 MULTIPLICATION TABLE
+	int* arr = (int*)malloc(len * sizeof(int));
+	for (int i = 0; i < len; i++) {
+		arr[i] = i+1;
+	}
+	int** table = (int**)malloc(len * sizeof(int*));
+	for (int i = 0; i < len; i++) {
+		table[i] = (int*)malloc(len * sizeof(int));
+		for (int j = 0; j < len; j++) {
+			if (!i) { table[i][j] = arr[j]; }
+			else { table[i][j] = arr[i] * table[0][j]; }
+		}
+	}
+	for (int i = 0; i < len; i++) {
+		printarray(table[i], len);
+	}
+}
+```
+5. Измерение времени
+```
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+void measuretime(void (*function)(int*, int), int*arr, int len) {
+	float t;
+	t = clock();
+	function(arr, len);
+	t = clock()-t;
+	printf("size: %d\ttime: %f ms\n", len, 1000*t/CLOCKS_PER_SEC);
+}
+void measuretime(int (*function)(int*, int), int* arr, int len) {
+	float t;
+	t = clock();
+	function(arr, len);
+	t = clock() - t;
+	printf("size: %d\ttime: %f ms\n", len, 1000 * t / CLOCKS_PER_SEC);
+}
+void measuretime(int (*function)(int, int*, int),int target, int* arr, int len) {
+	float t;
+	t = clock();
+	function(target, arr, len);
+	t = clock() - t;
+	printf("size: %d\ttime: %f ms\n", len, 1000 * t / CLOCKS_PER_SEC);
+}
+void measuretime(void (*function)( int), int len) {
+	float t;
+	t = clock();
+	function( len);
+	t = clock() - t;
+	printf("size: %d\ttime: %f ms\n", len, 1000 * t / CLOCKS_PER_SEC);
+}
 
 ```
 
