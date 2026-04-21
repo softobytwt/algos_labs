@@ -18,7 +18,7 @@ void printarray(int* arr, int len) {	//TASK 0 PRINTING ARRAY
 	printf("\n");
 }
 
-int findtarget(int target, int* arr, int len) {	// TASK 1 IS/ISNT IN ARRAY (BOOL)
+int findtarget(int target, int* arr, int len) {	// TASK 1 IS/ISNT IN ARRAY (INT)
 	for (int i = 0; i < len; i++) {
 		if (target == arr[i]) { return 1; }
 	}
