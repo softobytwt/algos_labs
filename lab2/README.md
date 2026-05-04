@@ -1,13 +1,356 @@
 # лабораторная работа 2 (playlist)
 # Бакаринова Софья Андреевна ИДБ-25-02
 
-обязательная часть:
-- добавление трека 
-- удаление трека
-- перемешивание (shuffle)
-- повтор (repeat one/ repeat all)
-- загрузка плейлиста из Base64-файла (одна строка - один трек)
-- фильтрация плейлиста по жанру
+### обязательная часть:
+1. добавление трека
+2. удаление трека
+3. перемешивание (shuffle)
+4. повтор (repeat one/ repeat all)
+5. загрузка плейлиста из Base64-файла (одна строка - один трек)
+6. фильтрация плейлиста по жанру
 
 
 также добавлена функция - вывод плейлиста в виде таблицы
+
+## выбор структуры данных
+был выбран динамический массив, так как:
+1. нужен быстрый доступ к элементам по индексу
+2. перемешивание через shuffle(vector.begin(), vector.end(), rng) 
+3. удаление элементов происходит с помощью vector.erase(vector.begin() + id) (O(1))
+
+
+## 1. класс трека
+```
+  class song {
+  public:
+  	std::string title;
+  	int length;
+  	std::string genre;
+  	int rating;
+  };
+```
+
+## 2. класс плейлиста 
+(в классе описаны примитивные функции 1, 2 и полная 3)
+```
+class playlist {
+public:
+	std::vector<song>mysongs;
+	int mode = 1;	// 0-off, 1-r.one, 2-r.all
+	int current_track = 0;
+	int next_track = 0;
+	
+	void add(song s1) {				           	//  <--- 1.add ONE track
+		mysongs.push_back(s1);
+	}
+
+	int find_index(std::string s) {       //  <--- finding index for deletetrack(s)
+		int id = -1;
+		for (int i = 0; i < size(); i++) {
+			if (s == mysongs.at(i).title) {
+				id = i;
+				break;
+			}
+		}
+		return id;
+
+	}
+
+	void deletetrack(std::string s) {			//  <--- 2. delete track (1/2)
+		int id = find_index(s);
+		if (id == current_track && id == size()-1) {
+			current_track = 0; next_track = 0; mode = 1;
+			std::cout << "CAUTION: repeat mode set to one\n"; 
+		}
+		if (id >= 0) {
+			mysongs.erase(mysongs.begin() + id);
+			std::cout << "track deleted\n";
+		}
+		else {
+			std::cout << "track not found in playlist" << std::endl;
+		}
+	}
+
+	int size() {                             // <--- get size of playlist
+		return mysongs.size();
+	}
+
+	void shuffle() {	                            //   <--- 3. shuffle
+		if (size()) {
+			auto rng = std::default_random_engine{};
+			std::shuffle(mysongs.begin(), mysongs.end(), rng);
+			std::cout << "\nplaylist shuffled!\n";
+		}
+		else { std::cout << "\nplaylist empty\n"; }
+	}
+
+	void currentplist() {               // <--- output current playlist as a table
+		if (size()) {
+			std::cout << "\ncurrent playlist: " << std::endl;
+			std::cout << "num\ttitle\t\tlength (sec)\tgenre\t\trating(5 stars)\n\n";
+			for (int i = 0; i < size(); ++i) {
+				std::cout << i + 1 << ".\t";
+				std::cout << mysongs.at(i).title << "\t";
+				if (mysongs.at(i).title.size() < 8) {std::cout << "\t";}
+				std::cout << mysongs.at(i).length << "\t\t";
+				std::cout << mysongs.at(i).genre << "\t";
+				if (mysongs.at(i).genre.size() < 8) { std::cout << "\t"; }
+				std::cout << mysongs.at(i).rating << "\t";
+				std::cout << std::endl;
+			}
+		}
+		else {
+			std::cout << "\nplaylist empty\n";
+		}
+		std::cout << std::endl;
+
+	}
+
+};
+```
+
+## добавление трека(ов)
+```
+void adding_many(playlist &p) {
+	int flag=1;
+	int count = 0;
+	while (flag) {
+		song nsong;
+		std::string pholder;
+
+		
+
+		std::cout << "input title: ";
+		std::getline(std::cin, nsong.title, '\n');
+
+
+		std::cout << "input length: ";
+		std::cin >> nsong.length;
+		while_fail_int(&nsong.length);
+
+
+		std::cout << "input genre: ";
+		std::getline(std::cin, pholder, '\n');
+		std::getline(std::cin, nsong.genre, '\n');
+
+
+		std::cout << "input rating: ";
+		std::cin >> nsong.rating;
+		
+		while_fail_int(&nsong.rating);
+		while (nsong.rating <1 || nsong.rating >5) {
+			std::cout << "rate from 1 to 5 (included): ";
+			std::cin >> nsong.rating;
+			while_fail_int(&nsong.rating);
+		}
+
+
+		p.add(nsong);
+		count++;
+		std::cout << "\ncontinue adding? (1-yes, 0-no): ";
+		std::cin >> flag;
+		std::getline(std::cin, pholder, '\n');
+		while_fail_int(&flag);
+	}
+	std::cout << "songs added: " << count << std::endl<<std::endl;
+
+}
+```
+
+## удаление трека 
+```
+void deleting(playlist &p) {
+	std::string titledel;
+	std::cout << "input the title of the track: ";
+	std::getline(std::cin, titledel);
+	p.deletetrack(titledel);
+}
+```
+
+## repeat one/all
+```
+void repeat(playlist& p) {
+	std::cout << "current repeat mode: ";
+	if (p.mode == 0) {
+		std::cout << "off\n";
+	}
+	else if (p.mode == 1) {
+		std::cout << "one\n";
+	}
+	else {
+		std::cout << "all\n";
+	}
+
+
+	if (p.size() == 1) {
+		std::cout << "cannot change repeat mode currently. add more tracks.\n";
+	}
+	else {
+		std::cout << "change repeat mode? (1-yes): ";
+		int repeatyn;
+		std::cin >> repeatyn;
+		while_fail_int(&repeatyn);
+		std::string phd;
+		std::getline(std::cin, phd);
+
+		if (repeatyn == 1) {
+			std::cout << "repeat modes:\n";
+			std::cout << "0. off\n1. one\n2. all\n";
+			std::cout << "new repeat mode: ";
+			std::cin >> p.mode;
+			if (p.mode == 0) {
+				if (p.size() > 1) { p.next_track = p.current_track + 1; }
+				else { p.next_track = -1; }
+			}
+			else if (p.mode == 1) {
+				if (p.size() > 1) { p.next_track = p.current_track; }
+				else if (p.size() == 1) { p.next_track = p.current_track; }
+			}
+			else {
+				if (p.size() >= 1) {
+					if (p.current_track == p.size() - 1) { p.next_track = 0; }
+					else { p.next_track = p.current_track + 1; }
+				}
+				else if (p.size() == 0) {
+					p.next_track = -1;
+				}
+			}
+		}
+	}
+}
+
+```
+## дополнительная часть к repeat: функция play
+```
+void play(playlist& p) {
+
+	if (p.size()) {
+		int yn = 1;
+		while (yn == 1) {
+			std::cout << "~~~ IN PLAYER\n\n";
+
+			std::cout << "currently playing: ";
+			
+			if (p.current_track>=0) {
+				std::cout << p.mysongs.at(p.current_track).title << std::endl;
+			}
+			else {
+				std::cout << "--- (playlist end reached. set repeat mode to all)\n";
+			}
+			std::cout << "1. play next\n2. EXIT PLAYER\n";
+
+			std::cin >> yn;
+			while_fail_int(&yn);
+			if (yn != 1)break;
+			
+			if (p.size() == 1) {
+				if (p.mode == 0) {
+					p.next_track = -1;
+					p.current_track = -1;
+				}
+				else {
+					p.next_track = p.current_track;
+				}
+			}
+			else {
+				if (p.mode == 0) {
+					if (p.next_track < p.size()) {
+						p.current_track = p.next_track;
+						p.next_track++;
+					}
+					else {
+						p.next_track = -1;
+						p.current_track = -1;
+
+					}
+				}
+				else if (p.mode == 1) {
+					p.next_track = p.current_track;
+				}
+				else {
+					if (p.next_track < p.size()) {
+						p.current_track = p.next_track;
+						p.next_track++;
+					}
+					else {
+						p.current_track = 0;
+						p.next_track = 1;
+					}
+
+				}
+			}
+
+		}
+		
+	}
+	else {
+		std::cout << "no tracks in playlist\n\n";
+	}
+}
+```
+## загрузка из Base64 файла
+```
+void add_from_file64(playlist& p) {
+	std::cout << "input filename (with .txt): ";
+	std::string filename;
+	std::cin >> filename;
+	std::string songdata64;
+
+	std::ifstream myfile(filename);
+
+	if (myfile.is_open()) {
+		Base64 b64;
+		while (std::getline(myfile, songdata64)) {
+			song nsong;
+
+
+			std::string songdata = b64.decode_str(songdata64);
+			std::string del = ";";
+			int start = 0;
+			int end = songdata.find(del);
+			std::vector<std::string> vectordata;
+
+
+			while (end != -1) {
+				vectordata.push_back(songdata.substr(start, end - start));
+				start = end + del.size();
+				end = songdata.find(del, start);
+			}
+
+			nsong.title = vectordata.at(0);
+			nsong.length = std::stoi(vectordata.at(1));
+			nsong.genre = vectordata.at(2);
+			nsong.rating = std::stoi(vectordata.at(3));
+
+			p.add(nsong);
+		}
+
+		myfile.close();
+	}
+	else std::cout << "ERROR: cant find file\n";
+
+}
+```
+## фильтрация по жанру
+```
+
+void filter(playlist& p) {
+	int size = p.size();
+	if (size > 1) {
+		for (int i = 0; i < size - 1; i++) {
+			std::string alph_genre_first = p.mysongs.at(i).genre;
+			int id = i;
+			for (int j = i + 1; j < size; j++) {
+				if (alph_genre_first > p.mysongs.at(j).genre) { alph_genre_first = p.mysongs.at(j).genre; id = j; }
+			}
+			song pholder = p.mysongs.at(i);
+			p.mysongs.at(i) = p.mysongs.at(id);
+			p.mysongs.at(id) = pholder;
+
+		}
+	}
+	else {
+		std::cout << "playlist has too little tracks to filter. add more tracks.\n";
+	}
+}
+```
