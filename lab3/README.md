@@ -75,7 +75,8 @@ int stack::size() {return stack_data.size();}
 7. если стек не пустой, кладем в temporaryC последний элемент через stack.peek()
 
 когда строка закончилась, если стек стал пустым - строка корректна, иначе - нет
-также функция more выполняет задание ВарЧасть6 (больше открывающих или закрывающих)
+
+также в конце check_brackets присутствует функция more, выполняет задание ВарЧасть6 (больше открывающих или закрывающих)
 
 lab3_data.cpp:
 ```
@@ -159,3 +160,61 @@ bool inAlp(char c, std::vector<std::string>alphabet) {       // returns whether 
 }
 ```
 
+## 3. дополнительные функции
+
+pair сравнивает два символа, возвращает 1 если они пара (т.е. ()-пара, (]-не пара)
+
+lab3_data.cpp:
+```
+bool pair(char first, char second, std::vector<std::string> alphabet) {
+	for (int i = 0; i < alphabet.size(); i++) {
+		if (first == alphabet[i][0] && second == alphabet[i][1]) {return 1;}
+	}
+	return 0; 
+}
+
+```
+
+more проверяет, каких скобок больше. возвращает 0, если ровно, 1 если открывающих, 2 если закрывающих
+
+lab3_data.cpp:
+```
+//				more checks if there are more open or closed brackets	ex.  []()-> 0(even),   ()( -> 1(open),   []} -> 2(closed)
+int more(stack brs, std::vector<std::string>alphabet) {
+	int lastsize = brs.size();
+
+	int open = 0;
+	int closed = 0;
+	for (int i = 0; i < lastsize; i++) {
+		char br = brs.peek();
+		for (int i = 0; i < alphabet.size(); i++) {
+			if (br == alphabet[i][1]) {
+				closed++;
+			}
+			else if(br== alphabet[i][0]) open++;
+		}
+		brs.pop();
+	}
+
+	if (open == closed) return 0;
+	if (open > closed) return 1;
+	return 2;
+}
+
+
+```
+
+
+## 4. прочие функции
+также используются функции, напрямую не влияющие на саму задачу.
+- cinpillow() <- "подушка безопасности" в случае, если человек ввел string, вместо int
+- header() <- оформление
+- filltest() <- заполняет массив строк заготовленными тестами
+- filluser() <- заполняет массив строк, человек вводит каждую строку
+- test_or_user() <- возвращает выбранный человеком способ (либо готовые тесты, либо писать строки самому)
+- output_data() <- выводит все данные в виде ровной таблицы
+
+определения прочих функций можно посмотреть в lab3_data.cpp
+
+
+  
