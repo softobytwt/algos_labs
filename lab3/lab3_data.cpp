@@ -112,7 +112,6 @@ void changeAlp(std::vector<std::string>*alphabet, int n) {
 
 
 
-
 //				inAlp checks if c is in alphabet			ex. inAlp('4', alp) -> false,     inAlp('[', alp) -> true
 bool inAlp(char c, std::vector<std::string>alphabet) {       // returns whether c is a symbol in the alphabet //
 	for (int i = 0; i < alphabet.size(); i++) {
@@ -122,19 +121,6 @@ bool inAlp(char c, std::vector<std::string>alphabet) {       // returns whether 
 	}
 	return false;
 }
-
-
-
-
-
-//				isClosed checks if c is a closed bracket		ex. isClosed(']', alp) -> true
-bool isClosed(char c, std::vector<std::string>alphabet) {
-	for (int i = 0; i < alphabet.size(); i++) {
-		if (c == alphabet[i][1]) return true;
-	}
-	return false;
-}
-
 
 
 
