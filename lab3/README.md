@@ -219,3 +219,25 @@ int more(stack brs, std::vector<std::string>alphabet) {
 
 ## 5. таблица выведенных значений
 
+alp = ["[]", "()", "{}"]
+|n|string|correct?|pairs|depth|more open or closed|
+|:--:|:--:|:--:|:--:|:--:|:--:|
+|1|()[]{}|true|3|1| =|
+|2|([)]|false|0|0|=|
+|3|a + (b * c)|true|1|1|=|
+|4|" "|true|0|0|=|
+
+
+alp = ["[]", "()", "{}", "<"]
+|n|string|correct?|pairs|depth|more open or closed|
+|:--:|:--:|:--:|:--:|:--:|:--:|
+|1|if (a[2] > b)|false|1|1|closed|
+|2|<><[]|false|2|1|open|
+|3|<[]>|true|2|2|=|
+
+alp = ["()"]
+|n|string|correct?|pairs|depth|more open or closed|
+|:--:|:--:|:--:|:--:|:--:|:--:|
+|1|if (a[2] > b)|true|1|1|=|
+|2|([])[|true|1|1|=|
+|3|<[]>|true|0|0|=|
