@@ -34,7 +34,6 @@ void filluser(std::vector<std::string>* array_test);
 
 
 bool inAlp(char c, std::vector<std::string>alphabet);
-bool isClosed(char c, std::vector<std::string>alphabet);
 
 
 //  main function 
