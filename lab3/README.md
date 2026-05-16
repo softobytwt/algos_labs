@@ -217,4 +217,5 @@ int more(stack brs, std::vector<std::string>alphabet) {
 определения прочих функций можно посмотреть в lab3_data.cpp
 
 
-  
+## 5. таблица выведенных значений
+
