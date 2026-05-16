@@ -127,32 +127,6 @@ bool inAlp(char c, std::vector<std::string>alphabet) {       // returns whether 
 
 
 
-//				isError checks if first+second is an error. error in this specific function is 'closed bracket'+'open bracket'
-//				note : this function doesnt find every error that can happen. only this specific "type".
-bool isError(char first, char second, std::vector<std::string>alphabet) {
-	std::string combo;
-	combo.push_back(first);
-	combo.push_back(second);
-	std::string wrongPair = "";
-	std::vector<std::string>alpWspace = alphabet;
-	alpWspace.push_back("  ");
-
-	for (int i = 0; i < alphabet.size(); i++) {
-		for (int j = 0; j < alpWspace.size(); j++) {
-			if (i == j) continue;
-			std::string wrongCombo;
-			wrongCombo.push_back(alphabet[i][0]);
-			wrongCombo.push_back(alpWspace[j][1]);
-			if (wrongCombo == combo) return 1;
-		}
-	}
-	return 0;
-}
-
-
-
-
-
 //				isClosed checks if c is a closed bracket		ex. isClosed(']', alp) -> true
 bool isClosed(char c, std::vector<std::string>alphabet) {
 	for (int i = 0; i < alphabet.size(); i++) {
