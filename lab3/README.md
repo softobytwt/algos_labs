@@ -87,7 +87,7 @@ std::vector<int> check_brackets(std::string brline, std::vector<std::string>alph
 	char temporaryC = 'a';
 
 	for (int i = 0; i < brline.size(); i++) {          //  <---  main loop 
-		if (not inAlp(brline[i], alphabet)) { continue; } // <--- if current character is not a bracket: goes to the next char
+		if (not inAlp(brline[i], alphabet)) { continue; } //<--- if current character is not a bracket: goes to next char
 		brackets_st.push(brline[i]);
 		
 
@@ -150,7 +150,7 @@ void changeAlp(std::vector<std::string>*alphabet, int n) {
 ```
 2.
 ```
-bool inAlp(char c, std::vector<std::string>alphabet) {       // returns whether c is a symbol in the alphabet //
+bool inAlp(char c, std::vector<std::string>alphabet) {    // returns whether c is a symbol in the alphabet //
 	for (int i = 0; i < alphabet.size(); i++) {
 		for (int j = 0; j < alphabet[i].size(); j++) {
 			if (c == alphabet[i][j]) return true;
@@ -179,7 +179,7 @@ more проверяет, каких скобок больше. возвраща�
 
 lab3_data.cpp:
 ```
-//				more checks if there are more open or closed brackets	ex.  []()-> 0(even),   ()( -> 1(open),   []} -> 2(closed)
+//	 more checks if there are more open or closed brackets	ex.  []()-> 0(even),   ()( -> 1(open),   []} -> 2(closed)
 int more(stack brs, std::vector<std::string>alphabet) {
 	int lastsize = brs.size();
 
